@@ -24,10 +24,14 @@ const nameImageInput = formImageElement.elements.placeName;
 const linkImageInput = formImageElement.elements.link;
 
 // Устанавливаем изображение профиля
-document.querySelector(".profile__image").style.backgroundImage = `url(${avatar})`;
+document.querySelector(
+  ".profile__image"
+).style.backgroundImage = `url(${avatar})`;
 
 // Добавляем класс анимации всем попапам
-document.querySelectorAll(".popup").forEach((popup) => popup.classList.add("popup_is-animated"));
+document
+  .querySelectorAll(".popup")
+  .forEach((popup) => popup.classList.add("popup_is-animated"));
 
 // Функция добавления слушателей закрытия попапов
 function addPopupListeners(popup) {
@@ -41,16 +45,6 @@ function addPopupListeners(popup) {
     }
   });
 }
-
-// Добавляем слушатели к каждому попапу
-[popupEdit, popupCard, popupImage].forEach(addPopupListeners);
-
-// Слушатели на кнопки открытия попапов
-editProfileButton.addEventListener("click", () => openModal(popupEdit));
-addCardButton.addEventListener("click", () => openModal(popupCard));
-
-// Рендеринг карточек
-renderCards(initialCards);
 
 // Обработчик отправки формы редактирования профиля
 function handleFormSubmit(evt) {
@@ -79,17 +73,6 @@ function handleLike(evt) {
   evt.target.classList.toggle("card__like-button_is-active");
 }
 
-// Добавляем слушатели на формы
-formElement.addEventListener("submit", handleFormSubmit);
-formImageElement.addEventListener("submit", handleFormImageSubmit);
-
-// Слушатели на лайки
-placesList.addEventListener("click", (evt) => {
-  if (evt.target.classList.contains("card__like-button")) {
-    handleLike(evt);
-  }
-});
-
 // Закрытие модалки по клику на Escape
 export function handleEscKeyUp(evt) {
   if (evt.key === "Escape") {
@@ -100,13 +83,48 @@ export function handleEscKeyUp(evt) {
   }
 }
 
+// Открытие попапа с картинкой
+export function handleCardImageClick(cardData) {
+  const popupImage = document.querySelector(".popup_type_image");
+  const popupImageElement = popupImage.querySelector(".popup__image");
+  const popupImageCaption = popupImage.querySelector(".popup__caption");
+
+  popupImageElement.src = cardData.link;
+  popupImageElement.alt = cardData.name;
+
+  if (popupImageCaption) {
+    popupImageCaption.textContent = cardData.name;
+  }
+  openModal(popupImage);
+}
+
 // Функция рендеринга карточек
-export function renderCards(cards) {
+function renderCards(cards) {
   const placesList = document.querySelector(".places__list");
 
   cards.forEach((cardData) => {
-    const cardElement = createCard(cardData);
+    const cardElement = createCard(cardData, handleLike, handleCardImageClick);
     placesList.appendChild(cardElement);
   });
 }
 
+// Cлушатели к каждому попапу
+[popupEdit, popupCard, popupImage].forEach(addPopupListeners);
+
+// Слушатели на кнопки открытия попапов
+editProfileButton.addEventListener("click", () => openModal(popupEdit));
+addCardButton.addEventListener("click", () => openModal(popupCard));
+
+// Cлушатели на формы
+formElement.addEventListener("submit", handleFormSubmit);
+formImageElement.addEventListener("submit", handleFormImageSubmit);
+
+// Слушатели на лайки
+placesList.addEventListener("click", (evt) => {
+  if (evt.target.classList.contains("card__like-button")) {
+    handleLike(evt);
+  }
+});
+
+// Рендеринг карточек
+renderCards(initialCards);

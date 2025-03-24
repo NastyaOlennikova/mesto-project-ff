@@ -1,6 +1,5 @@
 import { handleEscKeyUp } from "./index.js";
 
-
 //Открытие модалки
 export function openModal(popup) {
   popup.classList.add("popup_is-opened");
