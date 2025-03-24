@@ -3,6 +3,7 @@ import { initialCards, createCard, renderCards } from "./cards.js";
 import avatar from "../images/avatar.jpg";
 import { openModal, closeModal } from "./modal.js";
 
+// DOM-элементы
 const placesList = document.querySelector(".places__list");
 const editProfileButton = document.querySelector(".profile__edit-button");
 const addCardButton = document.querySelector(".profile__add-button");
@@ -22,14 +23,13 @@ const formImageElement = document.forms.formImage;
 const nameImageInput = formImageElement.elements.placeName;
 const linkImageInput = formImageElement.elements.link;
 
-document.querySelector(
-  ".profile__image"
-).style.backgroundImage = `url(${avatar})`;
+// Устанавливаем изображение профиля
+document.querySelector(".profile__image").style.backgroundImage = `url(${avatar})`;
 
-document.querySelectorAll(".popup").forEach((popup) => {
-  popup.classList.add("popup_is-animated");
-});
+// Добавляем класс анимации всем попапам
+document.querySelectorAll(".popup").forEach((popup) => popup.classList.add("popup_is-animated"));
 
+// Функция добавления слушателей закрытия попапов
 function addPopupListeners(popup) {
   const popupCloseButton = popup.querySelector(".popup__close");
 
@@ -42,24 +42,25 @@ function addPopupListeners(popup) {
   });
 }
 
-addPopupListeners(popupEdit);
-addPopupListeners(popupCard);
-addPopupListeners(popupImage);
+// Добавляем слушатели к каждому попапу
+[popupEdit, popupCard, popupImage].forEach(addPopupListeners);
 
+// Слушатели на кнопки открытия попапов
 editProfileButton.addEventListener("click", () => openModal(popupEdit));
 addCardButton.addEventListener("click", () => openModal(popupCard));
 
+// Рендеринг карточек
 renderCards(initialCards);
 
+// Обработчик отправки формы редактирования профиля
 function handleFormSubmit(evt) {
   evt.preventDefault();
-
   profileName.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
-
   closeModal(popupEdit);
 }
 
+// Обработчик отправки формы добавления карточки
 function handleFormImageSubmit(evt) {
   evt.preventDefault();
 
@@ -70,23 +71,26 @@ function handleFormImageSubmit(evt) {
   placesList.prepend(cardElement);
 
   closeModal(popupCard);
-
   formImageElement.reset();
 }
 
+// Лайк карточек
 function handleLike(evt) {
   evt.target.classList.toggle("card__like-button_is-active");
 }
 
+// Добавляем слушатели на формы
 formElement.addEventListener("submit", handleFormSubmit);
 formImageElement.addEventListener("submit", handleFormImageSubmit);
 
+// Слушатели на лайки
 placesList.addEventListener("click", (evt) => {
   if (evt.target.classList.contains("card__like-button")) {
     handleLike(evt);
   }
 });
 
+// Закрытие модалки по клику на Escape
 export function handleEscKeyUp(evt) {
   if (evt.key === "Escape") {
     const openedPopup = document.querySelector(".popup_is-opened");

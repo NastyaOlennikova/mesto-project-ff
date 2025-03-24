@@ -27,6 +27,7 @@ export const initialCards = [
   },
 ];
 
+// Функция создания карточки
 export function createCard(cardData, handleLike) {
   const cardTemplate = document.querySelector("#card-template").content;
   const popupImage = document.querySelector(".popup_type_image");
@@ -59,7 +60,7 @@ export function createCard(cardData, handleLike) {
 
   return cardElement;
 }
-
+// Функция рендеринга карточек
 export function renderCards(cards) {
   const placesList = document.querySelector(".places__list");
 
