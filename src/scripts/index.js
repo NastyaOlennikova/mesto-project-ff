@@ -1,5 +1,5 @@
 import "../pages/index.css";
-import { initialCards, createCard, renderCards } from "./cards.js";
+import { initialCards, createCard } from "./cards.js";
 import avatar from "../images/avatar.jpg";
 import { openModal, closeModal } from "./modal.js";
 
@@ -99,3 +99,14 @@ export function handleEscKeyUp(evt) {
     }
   }
 }
+
+// Функция рендеринга карточек
+export function renderCards(cards) {
+  const placesList = document.querySelector(".places__list");
+
+  cards.forEach((cardData) => {
+    const cardElement = createCard(cardData);
+    placesList.appendChild(cardElement);
+  });
+}
+

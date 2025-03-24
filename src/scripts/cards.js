@@ -60,12 +60,3 @@ export function createCard(cardData, handleLike) {
 
   return cardElement;
 }
-// Функция рендеринга карточек
-export function renderCards(cards) {
-  const placesList = document.querySelector(".places__list");
-
-  cards.forEach((cardData) => {
-    const cardElement = createCard(cardData);
-    placesList.appendChild(cardElement);
-  });
-}
