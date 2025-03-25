@@ -1,5 +1,6 @@
 import "../pages/index.css";
-import { initialCards, createCard } from "./cards.js";
+import { initialCards } from "./cards.js";
+import { createCard, handleCardDelete, handleCardLike } from "./card.js";
 import avatar from "../images/avatar.jpg";
 import { openModal, closeModal } from "./modal.js";
 
@@ -58,32 +59,19 @@ function handleFormSubmit(evt) {
 function handleFormImageSubmit(evt) {
   evt.preventDefault();
 
-  const name = nameImageInput.value;
-  const link = linkImageInput.value;
+  const cardData = {
+    name: nameImageInput.value,
+    link: linkImageInput.value,
+  };
 
-  const cardElement = createCard({ name, link });
+  const cardElement = createCard(cardData, handleCardLike, handleCardImageClick, handleCardDelete);
   placesList.prepend(cardElement);
 
   closeModal(popupCard);
   formImageElement.reset();
 }
 
-// Лайк карточек
-function handleLike(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
-}
-
-// Закрытие модалки по клику на Escape
-export function handleEscKeyUp(evt) {
-  if (evt.key === "Escape") {
-    const openedPopup = document.querySelector(".popup_is-opened");
-    if (openedPopup) {
-      closeModal(openedPopup);
-    }
-  }
-}
-
-// Открытие попапа с картинкой
+//Функция открытия попапа с картинкой
 export function handleCardImageClick(cardData) {
   const popupImage = document.querySelector(".popup_type_image");
   const popupImageElement = popupImage.querySelector(".popup__image");
@@ -103,13 +91,20 @@ function renderCards(cards) {
   const placesList = document.querySelector(".places__list");
 
   cards.forEach((cardData) => {
-    const cardElement = createCard(cardData, handleLike, handleCardImageClick);
+    const cardElement = createCard(cardData, handleCardLike, handleCardImageClick, handleCardDelete);
     placesList.appendChild(cardElement);
   });
 }
 
 // Cлушатели к каждому попапу
 [popupEdit, popupCard, popupImage].forEach(addPopupListeners);
+
+// Слушатели на лайки
+placesList.addEventListener("click", (evt) => {
+  if (evt.target.classList.contains("card__like-button")) {
+    handleCardLike(evt);
+  }
+});
 
 // Слушатели на кнопки открытия попапов
 editProfileButton.addEventListener("click", () => openModal(popupEdit));
@@ -118,13 +113,6 @@ addCardButton.addEventListener("click", () => openModal(popupCard));
 // Cлушатели на формы
 formElement.addEventListener("submit", handleFormSubmit);
 formImageElement.addEventListener("submit", handleFormImageSubmit);
-
-// Слушатели на лайки
-placesList.addEventListener("click", (evt) => {
-  if (evt.target.classList.contains("card__like-button")) {
-    handleLike(evt);
-  }
-});
 
 // Рендеринг карточек
 renderCards(initialCards);
