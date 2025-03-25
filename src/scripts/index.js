@@ -12,13 +12,15 @@ const addCardButton = document.querySelector(".profile__add-button");
 const popupEdit = document.querySelector(".popup_type_edit");
 const popupCard = document.querySelector(".popup_type_new-card");
 const popupImage = document.querySelector(".popup_type_image");
+const popupImageElement = popupImage.querySelector(".popup__image");
+const popupImageCaption = popupImage.querySelector(".popup__caption");
 
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 
-const formElement = document.forms.formEdit;
-const nameInput = formElement.elements.name;
-const jobInput = formElement.elements.description;
+const profileFormElement = document.forms.formEdit;
+const nameInput = profileFormElement.elements.name;
+const jobInput = profileFormElement.elements.description;
 
 const formImageElement = document.forms.formImage;
 const nameImageInput = formImageElement.elements.placeName;
@@ -48,7 +50,7 @@ function addPopupListeners(popup) {
 }
 
 // Обработчик отправки формы редактирования профиля
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
   profileName.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
@@ -64,7 +66,12 @@ function handleFormImageSubmit(evt) {
     link: linkImageInput.value,
   };
 
-  const cardElement = createCard(cardData, handleCardLike, handleCardImageClick, handleCardDelete);
+  const cardElement = createCard(
+    cardData,
+    handleCardLike,
+    handleCardImageClick,
+    handleCardDelete
+  );
   placesList.prepend(cardElement);
 
   closeModal(popupCard);
@@ -73,10 +80,6 @@ function handleFormImageSubmit(evt) {
 
 //Функция открытия попапа с картинкой
 export function handleCardImageClick(cardData) {
-  const popupImage = document.querySelector(".popup_type_image");
-  const popupImageElement = popupImage.querySelector(".popup__image");
-  const popupImageCaption = popupImage.querySelector(".popup__caption");
-
   popupImageElement.src = cardData.link;
   popupImageElement.alt = cardData.name;
 
@@ -88,10 +91,13 @@ export function handleCardImageClick(cardData) {
 
 // Функция рендеринга карточек
 function renderCards(cards) {
-  const placesList = document.querySelector(".places__list");
-
   cards.forEach((cardData) => {
-    const cardElement = createCard(cardData, handleCardLike, handleCardImageClick, handleCardDelete);
+    const cardElement = createCard(
+      cardData,
+      handleCardLike,
+      handleCardImageClick,
+      handleCardDelete
+    );
     placesList.appendChild(cardElement);
   });
 }
@@ -99,19 +105,12 @@ function renderCards(cards) {
 // Cлушатели к каждому попапу
 [popupEdit, popupCard, popupImage].forEach(addPopupListeners);
 
-// Слушатели на лайки
-placesList.addEventListener("click", (evt) => {
-  if (evt.target.classList.contains("card__like-button")) {
-    handleCardLike(evt);
-  }
-});
-
 // Слушатели на кнопки открытия попапов
 editProfileButton.addEventListener("click", () => openModal(popupEdit));
 addCardButton.addEventListener("click", () => openModal(popupCard));
 
 // Cлушатели на формы
-formElement.addEventListener("submit", handleFormSubmit);
+profileFormElement.addEventListener("submit", handleProfileFormSubmit);
 formImageElement.addEventListener("submit", handleFormImageSubmit);
 
 // Рендеринг карточек
