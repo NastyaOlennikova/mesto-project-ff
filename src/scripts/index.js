@@ -32,11 +32,9 @@ document.querySelector(
 ).style.backgroundImage = `url(${avatar})`;
 
 // Добавляем класс анимации и слушатели всем попапам
-  document
-  .querySelectorAll(".popup")
-  .forEach((popup) => {
-       popup.classList.add("popup_is-animated");
-       addPopupListeners(popup);
+document.querySelectorAll(".popup").forEach((popup) => {
+  popup.classList.add("popup_is-animated");
+  addPopupListeners(popup);
 });
 
 // Функция добавления слушателей закрытия попапов
@@ -107,8 +105,8 @@ function renderCards(cards) {
 
 // Слушатели на кнопки открытия попапов
 editProfileButton.addEventListener("click", () => {
-  nameInput.value = profileName.textContent;      
-  jobInput.value = profileDescription.textContent; 
+  nameInput.value = profileName.textContent;
+  jobInput.value = profileDescription.textContent;
   openModal(popupEdit);
 });
 addCardButton.addEventListener("click", () => openModal(popupCard));
