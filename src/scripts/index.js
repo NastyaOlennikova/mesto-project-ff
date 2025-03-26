@@ -31,10 +31,13 @@ document.querySelector(
   ".profile__image"
 ).style.backgroundImage = `url(${avatar})`;
 
-// Добавляем класс анимации всем попапам
-document
+// Добавляем класс анимации и слушатели всем попапам
+  document
   .querySelectorAll(".popup")
-  .forEach((popup) => popup.classList.add("popup_is-animated"));
+  .forEach((popup) => {
+       popup.classList.add("popup_is-animated");
+       addPopupListeners(popup);
+});
 
 // Функция добавления слушателей закрытия попапов
 function addPopupListeners(popup) {
@@ -102,11 +105,12 @@ function renderCards(cards) {
   });
 }
 
-// Cлушатели к каждому попапу
-[popupEdit, popupCard, popupImage].forEach(addPopupListeners);
-
 // Слушатели на кнопки открытия попапов
-editProfileButton.addEventListener("click", () => openModal(popupEdit));
+editProfileButton.addEventListener("click", () => {
+  nameInput.value = profileName.textContent;      
+  jobInput.value = profileDescription.textContent; 
+  openModal(popupEdit);
+});
 addCardButton.addEventListener("click", () => openModal(popupCard));
 
 // Cлушатели на формы
