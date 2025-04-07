@@ -110,8 +110,10 @@ function renderCards(cards) {
 enableValidation({
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_active'
+  inputErrorClass: '.popup__input_type_error',
+  errorClass: 'popup__input-error_active',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
 }); 
 
 // // очистка ошибок валидации вызовом clearValidation
