@@ -1,3 +1,5 @@
+import { hideInputError } from "./validation.js";
+
 //Открытие модалки
 export function openModal(popup) {
   popup.classList.add("popup_is-opened");
@@ -7,6 +9,7 @@ export function openModal(popup) {
 //Закрытие модалки
 export function closeModal(popup) {
   popup.classList.remove("popup_is-opened");
+  hideInputError(popup, popup.querySelector(".popup__input"));
   document.removeEventListener("keydown", handleEscKeyUp);
 }
 

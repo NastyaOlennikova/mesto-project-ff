@@ -3,7 +3,7 @@ import { initialCards } from "./cards.js";
 import { createCard, handleCardDelete, handleCardLike } from "./card.js";
 import avatar from "../images/avatar.jpg";
 import { openModal, closeModal } from "./modal.js";
-import { isValid } from "./validation.js";
+import { enableValidation } from "./validation.js";
 
 // DOM-элементы
 const placesList = document.querySelector(".places__list");
@@ -28,7 +28,6 @@ const jobInput = profileFormElement.elements.description;
 const formImageElement = document.forms.formImage;
 const nameImageInput = formImageElement.elements.placeName;
 const linkImageInput = formImageElement.elements.link;
-
 
 // Устанавливаем изображение профиля
 document.querySelector(
@@ -107,14 +106,13 @@ function renderCards(cards) {
   });
 }
 
-// enableValidation({
-//   formSelector: '.popup__form',
-//   inputSelector: '.popup__input',
-//   submitButtonSelector: '.popup__button',
-//   inactiveButtonClass: 'popup__button_disabled',
-//   inputErrorClass: 'popup__input_type_error',
-//   errorClass: 'popup__error_visible'
-// });
+
+enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_active'
+}); 
 
 // // очистка ошибок валидации вызовом clearValidation
 // clearValidation(profileFormElement, validationConfig);
@@ -127,20 +125,5 @@ editProfileButton.addEventListener("click", () => {
 });
 
 addCardButton.addEventListener("click", () => openModal(popupCard));
-
-
-
-forms.forEach((form) => {
-  const formInputList = profileFormElement.querySelectorAll(".popup__input");
-
-  formInputList.forEach((input) => {
-    input.addEventListener("input", () => {
-      isValid(form, input, 'Ошибка');  
-    });
-  });
-});
-
-
-
 // Рендеринг карточек
 renderCards(initialCards);
