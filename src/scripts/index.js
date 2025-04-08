@@ -106,26 +106,24 @@ function renderCards(cards) {
   });
 }
 
-
 enableValidation({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  inputErrorClass: '.popup__input_type_error',
-  errorClass: 'popup__input-error_active',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-}); 
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  inputErrorClass: ".popup__input_type_error",
+  errorClass: "popup__input-error_active",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+});
 
-// // очистка ошибок валидации вызовом clearValidation
-// clearValidation(profileFormElement, validationConfig);
-
-// Слушатели на кнопки открытия попапов
 editProfileButton.addEventListener("click", () => {
   nameInput.value = profileName.textContent;
   jobInput.value = profileDescription.textContent;
   openModal(popupEdit);
 });
 
-addCardButton.addEventListener("click", () => openModal(popupCard));
+addCardButton.addEventListener("click", () => {
+  formImageElement.reset();
+  openModal(popupCard);
+});
 // Рендеринг карточек
 renderCards(initialCards);
