@@ -58,6 +58,7 @@ const toggleButtonState = (
   inactiveButtonClass
 ) => {
   const submitButton = form.querySelector(submitButtonSelector);
+
   if (!submitButton) return;
 
   if (hasInvalidInput(inputList)) {
@@ -136,8 +137,11 @@ export const clearValidation = (form, validationConfig) => {
     )
   });
 
+  toggleButtonState(form, inputList, validationConfig.submitButtonSelector, validationConfig.inactiveButtonClass);
+
   errorList.forEach((errorElement) => {
     errorElement.textContent = "";
     errorElement.classList.remove(validationConfig.errorClass);
   });
+
 };

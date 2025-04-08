@@ -120,6 +120,11 @@ addCardButton.addEventListener("click", () => {
   formImageElement.reset();
   openModal(popupCard);
 });
+
+// Cлушатели на формы
+profileFormElement.addEventListener("submit", handleProfileFormSubmit);
+formImageElement.addEventListener("submit", handleFormImageSubmit);
+
 // Рендеринг карточек
 getUserData();
 renderCards(initialCards);
