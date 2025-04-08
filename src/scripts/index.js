@@ -4,7 +4,7 @@ import { createCard, handleCardDelete, handleCardLike } from "./card.js";
 import avatar from "../images/avatar.jpg";
 import { openModal, closeModal } from "./modal.js";
 import { enableValidation } from "./validation.js";
-
+import { getUserData } from "./api.js";
 // DOM-элементы
 const placesList = document.querySelector(".places__list");
 const editProfileButton = document.querySelector(".profile__edit-button");
@@ -28,11 +28,6 @@ const jobInput = profileFormElement.elements.description;
 const formImageElement = document.forms.formImage;
 const nameImageInput = formImageElement.elements.placeName;
 const linkImageInput = formImageElement.elements.link;
-
-// Устанавливаем изображение профиля
-document.querySelector(
-  ".profile__image"
-).style.backgroundImage = `url(${avatar})`;
 
 // Добавляем класс анимации и слушатели всем попапам
 document.querySelectorAll(".popup").forEach((popup) => {
@@ -126,4 +121,6 @@ addCardButton.addEventListener("click", () => {
   openModal(popupCard);
 });
 // Рендеринг карточек
+getUserData();
 renderCards(initialCards);
+

@@ -4,14 +4,14 @@ export const openedPopupClass = "popup_is-opened";
 
 //Открытие модалки
 export function openModal(popup) {
-  clearValidation(popup, {
-    formSelector: ".popup__form",
-    inputSelector: ".popup__input",
-    inputErrorClass: "popup__input_type_error",
-    errorClass: "popup__input-error_active",
-    submitButtonSelector: ".popup__button",
-    inactiveButtonClass: "popup__button_disabled",
-  });
+  // clearValidation(popup, {
+  //   formSelector: ".popup__form",
+  //   inputSelector: ".popup__input",
+  //   inputErrorClass: "popup__input_type_error",
+  //   errorClass: "popup__input-error_active",
+  //   submitButtonSelector: ".popup__button",
+  //   inactiveButtonClass: "popup__button_disabled",
+  // });
   popup.classList.add(openedPopupClass);
   document.addEventListener("keydown", handleEscKeyUp);
 }
