@@ -134,14 +134,18 @@ export const clearValidation = (form, validationConfig) => {
       inputElement,
       validationConfig.inputErrorClass,
       validationConfig.errorClass
-    )
+    );
   });
 
-  toggleButtonState(form, inputList, validationConfig.submitButtonSelector, validationConfig.inactiveButtonClass);
+  toggleButtonState(
+    form,
+    inputList,
+    validationConfig.submitButtonSelector,
+    validationConfig.inactiveButtonClass
+  );
 
   errorList.forEach((errorElement) => {
     errorElement.textContent = "";
     errorElement.classList.remove(validationConfig.errorClass);
   });
-
 };

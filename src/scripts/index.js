@@ -1,10 +1,9 @@
 import "../pages/index.css";
 import { initialCards } from "./cards.js";
 import { createCard, handleCardDelete, handleCardLike } from "./card.js";
-import avatar from "../images/avatar.jpg";
 import { openModal, closeModal } from "./modal.js";
 import { enableValidation } from "./validation.js";
-import { getUserData } from "./api.js";
+import { getCards, getUserData, patchUserData } from "./api.js";
 // DOM-элементы
 const placesList = document.querySelector(".places__list");
 const editProfileButton = document.querySelector(".profile__edit-button");
@@ -18,8 +17,6 @@ const popupImageCaption = popupImage.querySelector(".popup__caption");
 
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
-
-const forms = document.querySelectorAll(".popup__form");
 
 const profileFormElement = document.forms.formEdit;
 const nameInput = profileFormElement.elements.name;
@@ -51,8 +48,12 @@ function addPopupListeners(popup) {
 // Обработчик отправки формы редактирования профиля
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
+
+  patchUserData(nameInput.value, jobInput.value);
+
   profileName.textContent = nameInput.value;
   profileDescription.textContent = jobInput.value;
+
   closeModal(popupEdit);
 }
 
@@ -127,5 +128,11 @@ formImageElement.addEventListener("submit", handleFormImageSubmit);
 
 // Рендеринг карточек
 getUserData();
-renderCards(initialCards);
 
+getCards()
+  .then((cards) => {
+    renderCards(cards);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
