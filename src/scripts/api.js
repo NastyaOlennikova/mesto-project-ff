@@ -18,6 +18,7 @@ export const getUserData = () => {
       profileName.textContent = data.name;
       profileDescription.textContent = data.about;
       profileAvatar.style.backgroundImage = `url(${data.avatar})`;
+      return data;
     });
 };
 
@@ -57,17 +58,16 @@ export const patchUserData = (userData) => {
       name: userData.name,
       about: userData.about,
     }),
-  })
-  .then((res) => {
+  }).then((res) => {
     if (res.ok) {
       return res.json();
     }
     return Promise.reject(`Ошибка: ${res.status}`);
-  })
+  });
 };
 
 export const postCard = (cardData) => {
-  fetch("https://nomoreparties.co/v1/wff-cohort-36/cards", {
+  return fetch("https://nomoreparties.co/v1/wff-cohort-36/cards", {
     method: "POST",
     headers: {
       authorization: "5648edd2-97cd-4c73-bb98-6063d9d54aba",
@@ -77,22 +77,25 @@ export const postCard = (cardData) => {
       name: cardData.name,
       link: cardData.link,
     }),
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
-    .then((cardData) => {
-      createCard(
-        cardData,
-        handleCardLike,
-        handleCardImageClick,
-        handleCardDelete
-      );
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
+
+export const deleteCard = (cardId) => {
+  return fetch(`https://nomoreparties.co/v1/wff-cohort-36/cards/${cardId}`, {
+    method: "DELETE",
+    headers: {
+      authorization: "5648edd2-97cd-4c73-bb98-6063d9d54aba",
+      "Content-Type": "application/json",
+    },
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
 };

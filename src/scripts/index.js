@@ -24,6 +24,7 @@ const jobInput = profileFormElement.elements.description;
 const formImageElement = document.forms.formImage;
 const nameImageInput = formImageElement.elements.placeName;
 const linkImageInput = formImageElement.elements.link;
+let currentUserId;
 
 // Добавляем класс анимации и слушатели всем попапам
 document.querySelectorAll(".popup").forEach((popup) => {
@@ -53,11 +54,10 @@ function handleProfileFormSubmit(evt) {
     about: jobInput.value,
   };
 
-  patchUserData(userData) 
-  .then((data) => {
+  patchUserData(userData).then((data) => {
     profileName.textContent = data.name;
     profileDescription.textContent = data.about;
-  })
+  });
   closeModal(popupEdit);
 }
 
@@ -71,17 +71,27 @@ function handleFormImageSubmit(evt) {
   };
 
   postCard(cardData)
+    .then((newCardData) => {
+      return getUserData().then((userData) => {
+        const cardElement = createCard(
+          {
+            ...newCardData,
+            ownerId: newCardData.owner._id, // передаём владельца карточки
+          },
+          handleCardLike,
+          handleCardImageClick,
+          handleCardDelete,
+          userData._id // передаём текущего пользователя
+        );
 
-  const cardElement = createCard(
-    cardData,
-    handleCardLike,
-    handleCardImageClick,
-    handleCardDelete
-  );
-  placesList.prepend(cardElement);
-
-  closeModal(popupCard);
-  formImageElement.reset();
+        placesList.prepend(cardElement);
+        closeModal(popupCard);
+        formImageElement.reset();
+      });
+    })
+    .catch((err) => {
+      console.error("Ошибка при добавлении карточки:", err);
+    });
 }
 
 //Функция открытия попапа с картинкой
@@ -96,16 +106,25 @@ export function handleCardImageClick(cardData) {
 }
 
 // Функция рендеринга карточек
-function renderCards(cards) {
-  cards.forEach((cardData) => {
-    const cardElement = createCard(
-      cardData,
-      handleCardLike,
-      handleCardImageClick,
-      handleCardDelete
-    );
-    placesList.appendChild(cardElement);
-  });
+function renderCards() {
+  Promise.all([getUserData(), getCards()])
+    .then(([userData, cards]) => {
+      currentUserId = userData.id; // сохраняем ID пользователя
+
+      cards.forEach((cardData) => {
+        const cardElement = createCard(
+          cardData,
+          handleCardLike,
+          handleCardImageClick,
+          handleCardDelete,
+          currentUserId
+        );
+        placesList.appendChild(cardElement);
+      });
+    })
+    .catch((err) => {
+      console.error("Ошибка при загрузке данных:", err);
+    });
 }
 
 enableValidation({
@@ -132,13 +151,14 @@ addCardButton.addEventListener("click", () => {
 profileFormElement.addEventListener("submit", handleProfileFormSubmit);
 formImageElement.addEventListener("submit", handleFormImageSubmit);
 
+renderCards();
 // Рендеринг карточек
-getUserData();
+// getUserData();
 
-getCards()
-  .then((cards) => {
-    renderCards(cards);
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+// getCards()
+//   .then((cards) => {
+//     renderCards(cards);
+//   })
+//   .catch((err) => {
+//     console.error(err);
+//   });

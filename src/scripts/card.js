@@ -1,6 +1,13 @@
+import { deleteCard } from "./api.js";
 // Функция удаления карточки
-export function handleCardDelete(cardElement) {
-  cardElement.remove();
+export function handleCardDelete(cardId, cardElement) {
+  deleteCard(cardId)
+    .then(() => {
+      cardElement.remove();
+    })
+    .catch((err) => {
+      console.error("Ошибка при удалении карточки:", err);
+    });
 }
 
 // Функция лайка карточки
@@ -25,15 +32,20 @@ export function createCard(
   cardElement.querySelector(".card__title").textContent = cardData.name;
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
-  likeCounter.textContent = cardData.likes.length;
 
-  if (cardData.ownerId === 'bba393d2f55dee117eb1eb37') {
-    deleteButton.addEventListener("click", () => handleDelete(cardElement));
+  if (cardData.ownerId === "bba393d2f55dee117eb1eb37") {
+    deleteButton.addEventListener("click", () =>
+      handleDelete(cardData.id, cardElement)
+    );
   } else {
     deleteButton.remove();
   }
- 
-  cardImage.addEventListener("click", () => handleImageClick(cardData)); // Используем переданный обработчик
+
+  if (cardData.likes) {
+    likeCounter.textContent = cardData.likes.length;
+  }
+
+  cardImage.addEventListener("click", () => handleImageClick(cardData));
 
   likeButton.addEventListener("click", handleLike);
 
