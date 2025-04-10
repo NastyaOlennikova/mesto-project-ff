@@ -1,9 +1,8 @@
 import "../pages/index.css";
-import { initialCards } from "./cards.js";
 import { createCard, handleCardDelete, handleCardLike } from "./card.js";
 import { openModal, closeModal } from "./modal.js";
 import { enableValidation } from "./validation.js";
-import { getCards, getUserData, patchUserData } from "./api.js";
+import { getCards, getUserData, patchUserData, postCard } from "./api.js";
 // DOM-элементы
 const placesList = document.querySelector(".places__list");
 const editProfileButton = document.querySelector(".profile__edit-button");
@@ -49,11 +48,16 @@ function addPopupListeners(popup) {
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
-  patchUserData(nameInput.value, jobInput.value);
+  const userData = {
+    name: nameInput.value,
+    about: jobInput.value,
+  };
 
-  profileName.textContent = nameInput.value;
-  profileDescription.textContent = jobInput.value;
-
+  patchUserData(userData) 
+  .then((data) => {
+    profileName.textContent = data.name;
+    profileDescription.textContent = data.about;
+  })
   closeModal(popupEdit);
 }
 
@@ -65,6 +69,8 @@ function handleFormImageSubmit(evt) {
     name: nameImageInput.value,
     link: linkImageInput.value,
   };
+
+  postCard(cardData)
 
   const cardElement = createCard(
     cardData,

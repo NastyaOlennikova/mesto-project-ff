@@ -46,16 +46,53 @@ export const getCards = () => {
     });
 };
 
-export const patchUserData = (name, about) => {
-  fetch("https://nomoreparties.co/v1/wff-cohort-36/users/me", {
+export const patchUserData = (userData) => {
+  return fetch("https://nomoreparties.co/v1/wff-cohort-36/users/me", {
     method: "PATCH",
     headers: {
       authorization: "5648edd2-97cd-4c73-bb98-6063d9d54aba",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      name,
-      about,
+      name: userData.name,
+      about: userData.about,
     }),
-  });
+  })
+  .then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  })
+};
+
+export const postCard = (cardData) => {
+  fetch("https://nomoreparties.co/v1/wff-cohort-36/cards", {
+    method: "POST",
+    headers: {
+      authorization: "5648edd2-97cd-4c73-bb98-6063d9d54aba",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: cardData.name,
+      link: cardData.link,
+    }),
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .then((cardData) => {
+      createCard(
+        cardData,
+        handleCardLike,
+        handleCardImageClick,
+        handleCardDelete
+      );
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 };
