@@ -1,4 +1,5 @@
-import { deleteCard } from "./api.js";
+import { deleteCard, putLike, deleteLike, getUserData } from "./api.js";
+
 // Функция удаления карточки
 export function handleCardDelete(cardId, cardElement) {
   deleteCard(cardId)
@@ -10,9 +11,23 @@ export function handleCardDelete(cardId, cardElement) {
     });
 }
 
-// Функция лайка карточки
-export function handleCardLike(evt) {
-  evt.target.classList.toggle("card__like-button_is-active");
+export function handleCardLike(evt, cardId) {
+  const likeButton = evt.target;
+  const cardElement = likeButton.closest(".card");
+  const likeCounter = cardElement.querySelector(".card__like-counter");
+
+  const isLiked = likeButton.classList.contains("card__like-button_is-active");
+
+  const likeAction = isLiked ? deleteLike : putLike;
+
+  likeAction(cardId)
+    .then((data) => {
+      likeButton.classList.toggle("card__like-button_is-active");
+      likeCounter.textContent = data.likes.length;
+    })
+    .catch((err) => {
+      console.error("Ошибка при обработке лайка:", err);
+    });
 }
 
 // Функция создания карточки
@@ -20,7 +35,8 @@ export function createCard(
   cardData,
   handleLike,
   handleImageClick,
-  handleDelete
+  handleDelete,
+  currentUserId
 ) {
   const cardTemplate = document.querySelector("#card-template").content;
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
@@ -33,7 +49,7 @@ export function createCard(
   cardImage.src = cardData.link;
   cardImage.alt = cardData.name;
 
-  if (cardData.ownerId === "bba393d2f55dee117eb1eb37") {
+  if (cardData.owner._id === currentUserId) {
     deleteButton.addEventListener("click", () =>
       handleDelete(cardData.id, cardElement)
     );
@@ -47,7 +63,7 @@ export function createCard(
 
   cardImage.addEventListener("click", () => handleImageClick(cardData));
 
-  likeButton.addEventListener("click", handleLike);
+  likeButton.addEventListener("click", () => handleLike(event, cardData.id));
 
   return cardElement;
 }

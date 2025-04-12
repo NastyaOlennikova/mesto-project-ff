@@ -99,3 +99,63 @@ export const deleteCard = (cardId) => {
     return Promise.reject(`Ошибка: ${res.status}`);
   });
 };
+
+export const putLike = (cardId) => {
+  return fetch(
+    `https://nomoreparties.co/v1/wff-cohort-36/cards/likes/${cardId}`,
+    {
+      method: "PUT",
+      headers: {
+        authorization: "5648edd2-97cd-4c73-bb98-6063d9d54aba",
+        "Content-Type": "application/json",
+      },
+    }
+  ).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
+
+export const deleteLike = (cardId) => {
+  return fetch(
+    `https://nomoreparties.co/v1/wff-cohort-36/cards/likes/${cardId}`,
+    {
+      method: "DELETE",
+      headers: {
+        authorization: "5648edd2-97cd-4c73-bb98-6063d9d54aba",
+        "Content-Type": "application/json",
+      },
+    }
+  ).then((res) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`);
+  });
+};
+
+export const patchAvatar = (avatarUrl) => {
+  return fetch("https://nomoreparties.co/v1/wff-cohort-36/users/me/avatar", {
+    method: "PATCH",
+    headers: {
+      authorization: "5648edd2-97cd-4c73-bb98-6063d9d54aba",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      avatar: avatarUrl,
+    }),
+  })
+    .then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+    .then((data) => {
+      const profileAvatar = document.querySelector(".profile__image");
+      profileAvatar.style.backgroundImage = `url(${data.avatar})`;
+      return data;
+    });
+};

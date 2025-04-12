@@ -4,6 +4,8 @@ export const openedPopupClass = "popup_is-opened";
 
 //Открытие модалки
 export function openModal(popup) {
+  popup.classList.add(openedPopupClass);
+
   clearValidation(popup, {
     formSelector: ".popup__form",
     inputSelector: ".popup__input",
@@ -12,7 +14,6 @@ export function openModal(popup) {
     submitButtonSelector: ".popup__button",
     inactiveButtonClass: "popup__button_disabled",
   });
-  popup.classList.add(openedPopupClass);
   document.addEventListener("keydown", handleEscKeyUp);
 }
 

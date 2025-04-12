@@ -2,7 +2,13 @@ import "../pages/index.css";
 import { createCard, handleCardDelete, handleCardLike } from "./card.js";
 import { openModal, closeModal } from "./modal.js";
 import { enableValidation } from "./validation.js";
-import { getCards, getUserData, patchUserData, postCard } from "./api.js";
+import {
+  getCards,
+  getUserData,
+  patchAvatar,
+  patchUserData,
+  postCard,
+} from "./api.js";
 // DOM-элементы
 const placesList = document.querySelector(".places__list");
 const editProfileButton = document.querySelector(".profile__edit-button");
@@ -11,19 +17,26 @@ const addCardButton = document.querySelector(".profile__add-button");
 const popupEdit = document.querySelector(".popup_type_edit");
 const popupCard = document.querySelector(".popup_type_new-card");
 const popupImage = document.querySelector(".popup_type_image");
+const popupAvatar = document.querySelector(".popup_type_avatar");
 const popupImageElement = popupImage.querySelector(".popup__image");
 const popupImageCaption = popupImage.querySelector(".popup__caption");
 
 const profileName = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const profileImage = document.querySelector(".profile__image");
 
 const profileFormElement = document.forms.formEdit;
 const nameInput = profileFormElement.elements.name;
 const jobInput = profileFormElement.elements.description;
 
+const avatarFormElement = document.forms.formAvatar;
+const avatarInput = avatarFormElement.elements.avatarLink;
+const avatarButton = document.querySelector(".profile__avatar-button");
+
 const formImageElement = document.forms.formImage;
 const nameImageInput = formImageElement.elements.placeName;
 const linkImageInput = formImageElement.elements.link;
+
 let currentUserId;
 
 // Добавляем класс анимации и слушатели всем попапам
@@ -81,7 +94,7 @@ function handleFormImageSubmit(evt) {
           handleCardLike,
           handleCardImageClick,
           handleCardDelete,
-          userData._id // передаём текущего пользователя
+          currentUserId
         );
 
         placesList.prepend(cardElement);
@@ -91,6 +104,22 @@ function handleFormImageSubmit(evt) {
     })
     .catch((err) => {
       console.error("Ошибка при добавлении карточки:", err);
+    });
+}
+
+function handleAvatarFormSubmit(evt) {
+  evt.preventDefault();
+  const avatarUrl = avatarInput.value;
+
+  patchAvatar(avatarUrl)
+    .then((data) => {
+      profileImage.style.backgroundImage = `url(${data.avatar})`;
+      closeModal(popupAvatar);
+      // Сброс формы после успешного обновления аватара
+      avatarFormElement.reset();
+    })
+    .catch((err) => {
+      console.error("Ошибка при обновлении аватара:", err);
     });
 }
 
@@ -109,7 +138,7 @@ export function handleCardImageClick(cardData) {
 function renderCards() {
   Promise.all([getUserData(), getCards()])
     .then(([userData, cards]) => {
-      currentUserId = userData.id; // сохраняем ID пользователя
+      currentUserId = userData._id; // сохраняем ID пользователя
 
       cards.forEach((cardData) => {
         const cardElement = createCard(
@@ -142,6 +171,11 @@ editProfileButton.addEventListener("click", () => {
   openModal(popupEdit);
 });
 
+avatarButton.addEventListener("click", () => {
+  avatarFormElement.reset();
+  openModal(popupAvatar);
+});
+
 addCardButton.addEventListener("click", () => {
   formImageElement.reset();
   openModal(popupCard);
@@ -150,15 +184,6 @@ addCardButton.addEventListener("click", () => {
 // Cлушатели на формы
 profileFormElement.addEventListener("submit", handleProfileFormSubmit);
 formImageElement.addEventListener("submit", handleFormImageSubmit);
+avatarFormElement.addEventListener("submit", handleAvatarFormSubmit);
 
 renderCards();
-// Рендеринг карточек
-// getUserData();
-
-// getCards()
-//   .then((cards) => {
-//     renderCards(cards);
-//   })
-//   .catch((err) => {
-//     console.error(err);
-//   });
