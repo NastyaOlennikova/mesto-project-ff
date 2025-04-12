@@ -125,7 +125,7 @@ export const putLike = (cardId) => {
 };
 
 export const deleteLike = (cardId) => {
-  return fetch(`${config.baseUrl}cards/likes/${cardId}`, {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: {
       authorization: config.headers.authorization,
