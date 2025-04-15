@@ -6,27 +6,21 @@ const config = {
   },
 };
 
-export const getUserData = () => {
-  const profileName = document.querySelector(".profile__title");
-  const profileDescription = document.querySelector(".profile__description");
-  const profileAvatar = document.querySelector(".profile__image");
+const handleResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
+};
 
+export const getUserData = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: {
       authorization: config.headers.authorization,
     },
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(handleResponse)
     .then((data) => {
-      profileName.textContent = data.name;
-      profileDescription.textContent = data.about;
-      profileAvatar.style.backgroundImage = `url(${data.avatar})`;
-
       return data;
     });
 };
@@ -37,22 +31,9 @@ export const getCards = () => {
       authorization: config.headers.authorization,
     },
   })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    })
+    .then(handleResponse)
     .then((data) => {
-      return data.map((item) => ({
-        name: item.name,
-        link: item.link,
-        likes: item.likes,
-        owner: item.owner,
-        id: item._id,
-        ownerId: item.owner._id,
-        ownerName: item.owner.name,
-      }));
+      return data;
     });
 };
 
@@ -63,16 +44,8 @@ export const patchUserData = (userData) => {
       authorization: config.headers.authorization,
       "Content-Type": config.headers["Content-Type"],
     },
-    body: JSON.stringify({
-      name: userData.name,
-      about: userData.about,
-    }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+    body: JSON.stringify(userData),
+  }).then(handleResponse);
 };
 
 export const postCard = (cardData) => {
@@ -86,12 +59,7 @@ export const postCard = (cardData) => {
       name: cardData.name,
       link: cardData.link,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 
 export const deleteCard = (cardId) => {
@@ -101,12 +69,7 @@ export const deleteCard = (cardId) => {
       authorization: config.headers.authorization,
       "Content-Type": config.headers["Content-Type"],
     },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 
 export const putLike = (cardId) => {
@@ -116,12 +79,7 @@ export const putLike = (cardId) => {
       authorization: config.headers.authorization,
       "Content-Type": config.headers["Content-Type"],
     },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 
 export const deleteLike = (cardId) => {
@@ -131,12 +89,7 @@ export const deleteLike = (cardId) => {
       authorization: config.headers.authorization,
       "Content-Type": config.headers["Content-Type"],
     },
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };
 
 export const patchAvatar = (avatarUrl) => {
@@ -149,10 +102,5 @@ export const patchAvatar = (avatarUrl) => {
     body: JSON.stringify({
       avatar: avatarUrl,
     }),
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(handleResponse);
 };

@@ -168,6 +168,9 @@ export function handleCardImageClick(cardData) {
 function renderInitData() {
   Promise.all([getUserData(), getCards()])
     .then(([userData, cards]) => {
+      profileName.textContent = userData.name;
+      profileDescription.textContent = userData.about;
+      profileImage.style.backgroundImage = `url(${userData.avatar})`;
       currentUserId = userData._id;
 
       cards.forEach((cardData) => {
