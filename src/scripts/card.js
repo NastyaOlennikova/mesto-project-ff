@@ -51,7 +51,7 @@ export function createCard(
 
   if (cardData.owner._id === currentUserId) {
     deleteButton.addEventListener("click", () =>
-      handleDelete(cardData.id, cardElement)
+      handleDelete(cardData._id, cardElement)
     );
   } else {
     deleteButton.remove();
