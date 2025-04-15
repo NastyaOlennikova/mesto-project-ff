@@ -1,4 +1,4 @@
-import { deleteCard, putLike, deleteLike, getUserData } from "./api.js";
+import { deleteCard, putLike, deleteLike } from "./api.js";
 
 // Функция удаления карточки
 export function handleCardDelete(cardId, cardElement) {
@@ -59,6 +59,10 @@ export function createCard(
 
   if (cardData.likes) {
     likeCounter.textContent = cardData.likes.length;
+  }
+
+  if(cardData.likes.some((like) => like._id === currentUserId)) {
+    likeButton.classList.add("card__like-button_is-active");
   }
 
   cardImage.addEventListener("click", () => handleImageClick(cardData));

@@ -165,7 +165,7 @@ export function handleCardImageClick(cardData) {
 }
 
 // Функция рендеринга карточек
-function renderCards() {
+function renderInitData() {
   Promise.all([getUserData(), getCards()])
     .then(([userData, cards]) => {
       currentUserId = userData._id;
@@ -188,11 +188,7 @@ function renderCards() {
 
 // Функция рендеринга состояния кнопки
 function renderLoading(isLoading, button) {
-  if (isLoading) {
-    button.textContent = "Сохранение...";
-  } else {
-    button.textContent = "Сохранить";
-  }
+  button.textContent = isLoading ? "Сохранение..." : "Сохранить";
 }
 
 // Включаем валидацию форм
@@ -227,4 +223,4 @@ profileFormElement.addEventListener("submit", handleProfileFormSubmit);
 formImageElement.addEventListener("submit", handleFormImageSubmit);
 avatarFormElement.addEventListener("submit", handleAvatarFormSubmit);
 
-renderCards();
+renderInitData();

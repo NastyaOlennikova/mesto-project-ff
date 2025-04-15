@@ -26,9 +26,7 @@ export const hideInputError = (
 const isValid = (form, inputElement, inputErrorClass, errorClass) => {
   inputElement.setCustomValidity("");
 
-  if (inputElement.validity.valueMissing) {
-    inputElement.setCustomValidity("Вы пропустили это поле");
-  } else if (inputElement.validity.patternMismatch) {
+  if (inputElement.validity.patternMismatch) {
     inputElement.setCustomValidity(inputElement.dataset.errorMessage);
   }
 
@@ -143,9 +141,4 @@ export const clearValidation = (form, validationConfig) => {
     validationConfig.submitButtonSelector,
     validationConfig.inactiveButtonClass
   );
-
-  errorList.forEach((errorElement) => {
-    errorElement.textContent = "";
-    errorElement.classList.remove(validationConfig.errorClass);
-  });
 };
